@@ -1,29 +1,10 @@
-from datasets import DatasetDict
-from transformers import (
-    AutoModel,
-    DataCollatorForLanguageModeling,
-    PreTrainedTokenizerFast,
-    Trainer,
-    TrainingArguments,
-)
+from typing import List
+from transformers import Trainer
 
-
-def initialize_trainer(
-    model: AutoModel,
-    tokenizer: PreTrainedTokenizerFast,
-    data_collator: DataCollatorForLanguageModeling,
-    datasets: DatasetDict,
-    **config,
-):
-    args = TrainingArguments(**config)
-
-    trainer = Trainer(
-        model=model,
-        tokenizer=tokenizer,
-        args=args,
-        data_collator=data_collator,
-        train_dataset=datasets["train"],
-        eval_dataset=datasets["valid"],
-    )
-
-    return trainer
+class XlstmCapableTrainer(Trainer):
+    def get_decay_parameters(self, model) -> List[str]:
+        xlstm = getattr(model, xlstm, None)
+        if xlstm is None:
+            return super().get_decay_parameters(model)
+        else:
+            return xlstm.get_weight_decay_optim_group_param_names()[0]
