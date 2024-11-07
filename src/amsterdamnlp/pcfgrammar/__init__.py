@@ -20,7 +20,7 @@ from transformers.utils import (
     is_tokenizers_available,
     is_torch_available,
 )
-
+from transformers.utils.import_utils import _is_package_available
 
 _import_structure = {
     "configuration_pcfg": ["PcfgConfig", "PcfgXlstmConfig"],
@@ -44,6 +44,14 @@ else:
     _import_structure["modeling_pcfg_xlstm"] = [
         "PcfgXlstmLMHeadModel",
     ]
+
+try:
+    if not _is_package_available("evaluate"):
+        raise OptionalDependencyNotAvailable()
+except OptionalDependencyNotAvailable:
+    pass
+else:
+    _import_structure["perplexity"] = ["Perplexity"]
 
 if TYPE_CHECKING:
     from .configuration_pcfg import PcfgConfig, PcfgXlstmConfig
