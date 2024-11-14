@@ -30,9 +30,9 @@ logger = logging.getLogger(__name__)
 
 @click.command()
 @click.pass_context
-@click.argument("config", type=click.Path(path_type=pathlib.Path, exists=True))
+@click.argument("config_file", type=click.Path(path_type=pathlib.Path, exists=True))
 
-def run(config_file: pathlib.Path):
+def run(ctx, config_file: pathlib.Path):
     """
     Build a model according to the passed config
     """
