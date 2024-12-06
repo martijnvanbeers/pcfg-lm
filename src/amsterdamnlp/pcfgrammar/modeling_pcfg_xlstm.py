@@ -38,7 +38,7 @@ class PcfgXlstmLMHeadModel(PreTrainedModel):
         xlstm_config = dacite.from_dict(xLSTMLMModelConfig, config.to_dict())
         self.xlstm = xLSTMLMModel(xlstm_config)
 
-    def forward(self, input_ids=None, labels=None, attention_mask=None):
+    def forward(self, input_ids=None, labels=None, **kwargs):
         loss = None
 
         lm_logits = self.xlstm.forward(input_ids)
@@ -54,8 +54,6 @@ class PcfgXlstmLMHeadModel(PreTrainedModel):
                 logits=lm_logits,
             )
 
-# register our class with AutoModelForCausalLM
-#PcfgXlstmLMHeadModel.register_for_auto_class(auto_class=AutoModelForCausalLM)
 
 # register this way so save model doesn't create custom code
 AutoModelForCausalLM.register(PcfgXlstmConfig, PcfgXlstmLMHeadModel)
