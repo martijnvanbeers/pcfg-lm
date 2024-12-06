@@ -10,7 +10,7 @@ from amsterdamnlp.pcfgrammar import *
 @click.pass_context
 @click.argument("config", type=click.Path(path_type=pathlib.Path, exists=True))
 @click.argument("step", type=int)
-def run(config: pathlib.Path, step):
+def run(ctx, config: pathlib.Path, step):
     """
     Calculate perplexities on a model checkpoint
     """
