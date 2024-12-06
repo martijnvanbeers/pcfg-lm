@@ -11,6 +11,8 @@ import torch
 
 import datasets
 
+from codecarbon import OfflineEmissionsTracker
+
 from transformers import (
         AutoModelForCausalLM,
         AutoTokenizer,
@@ -69,7 +71,13 @@ def run(ctx, config_file: pathlib.Path):
                 eval_dataset=dsd["valid"],
             )
 
-    train_result = trainer.train()
+    with OfflineEmissionsTracker(
+            experiment_name=model_config.model_type,
+            experiment_id=train_args.output_dir[28:],
+            country_iso_code="NLD")
+    as tracker:
+
+        train_result = trainer.train()
     trainer.state.save_to_json(pathlib.Path(config['trainer']['logging_dir']) / "train_state.json")
     trainer._save_checkpoint(trainer.model, None)
 
